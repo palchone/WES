@@ -1,0 +1,1307 @@
+ARM GAS  /tmp/cc1r2KjE.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"main.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.init_AudioReset,"ax",%progbits
+  18              		.align	1
+  19              		.global	init_AudioReset
+  20              		.arch armv7e-m
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  24              		.fpu fpv4-sp-d16
+  26              	init_AudioReset:
+  27              	.LFB131:
+  28              		.file 1 "Core/Src/main.c"
+   1:Core/Src/main.c **** /* USER CODE BEGIN Header */
+   2:Core/Src/main.c **** /**
+   3:Core/Src/main.c ****   ******************************************************************************
+   4:Core/Src/main.c ****   * @file           : main.c
+   5:Core/Src/main.c ****   * @brief          : Main program body
+   6:Core/Src/main.c ****   ******************************************************************************
+   7:Core/Src/main.c ****   * @attention
+   8:Core/Src/main.c ****   *
+   9:Core/Src/main.c ****   * Copyright (c) 2021 STMicroelectronics.
+  10:Core/Src/main.c ****   * All rights reserved.
+  11:Core/Src/main.c ****   *
+  12:Core/Src/main.c ****   * This software is licensed under terms that can be found in the LICENSE file
+  13:Core/Src/main.c ****   * in the root directory of this software component.
+  14:Core/Src/main.c ****   * If no LICENSE file comes with this software, it is provided AS-IS.
+  15:Core/Src/main.c ****   *
+  16:Core/Src/main.c ****   ******************************************************************************
+  17:Core/Src/main.c ****   */
+  18:Core/Src/main.c **** /* USER CODE END Header */
+  19:Core/Src/main.c **** /* Includes ------------------------------------------------------------------*/
+  20:Core/Src/main.c **** #include <stdlib.h>
+  21:Core/Src/main.c **** #include <stdint.h>
+  22:Core/Src/main.c **** #include "main.h"
+  23:Core/Src/main.c **** #include "i2c.h"
+  24:Core/Src/main.c **** #include "i2s.h"
+  25:Core/Src/main.c **** #include "gpio.h"
+  26:Core/Src/main.c **** #include "audio.h"
+  27:Core/Src/main.c **** 
+  28:Core/Src/main.c **** /* Private includes ----------------------------------------------------------*/
+  29:Core/Src/main.c **** /* USER CODE BEGIN Includes */
+  30:Core/Src/main.c **** 
+ARM GAS  /tmp/cc1r2KjE.s 			page 2
+
+
+  31:Core/Src/main.c **** /* USER CODE END Includes */
+  32:Core/Src/main.c **** 
+  33:Core/Src/main.c **** /* Private typedef -----------------------------------------------------------*/
+  34:Core/Src/main.c **** /* USER CODE BEGIN PTD */
+  35:Core/Src/main.c **** 
+  36:Core/Src/main.c **** /* USER CODE END PTD */
+  37:Core/Src/main.c **** 
+  38:Core/Src/main.c **** /* Private define ------------------------------------------------------------*/
+  39:Core/Src/main.c **** /* USER CODE BEGIN PD */
+  40:Core/Src/main.c **** /* USER CODE END PD */
+  41:Core/Src/main.c **** 
+  42:Core/Src/main.c **** /* Private macro -------------------------------------------------------------*/
+  43:Core/Src/main.c **** /* USER CODE BEGIN PM */
+  44:Core/Src/main.c **** 
+  45:Core/Src/main.c **** /* USER CODE END PM */
+  46:Core/Src/main.c **** 
+  47:Core/Src/main.c **** /* Private variables ---------------------------------------------------------*/
+  48:Core/Src/main.c **** 
+  49:Core/Src/main.c **** /* USER CODE BEGIN PV */
+  50:Core/Src/main.c **** 
+  51:Core/Src/main.c **** /* USER CODE END PV */
+  52:Core/Src/main.c **** 
+  53:Core/Src/main.c **** /* Private function prototypes -----------------------------------------------*/
+  54:Core/Src/main.c **** void SystemClock_Config(void);
+  55:Core/Src/main.c **** /* USER CODE BEGIN PFP */
+  56:Core/Src/main.c **** 
+  57:Core/Src/main.c **** /* USER CODE END PFP */
+  58:Core/Src/main.c **** 
+  59:Core/Src/main.c **** /* Private user code ---------------------------------------------------------*/
+  60:Core/Src/main.c **** /* USER CODE BEGIN 0 */
+  61:Core/Src/main.c **** void configAudio(){
+  62:Core/Src/main.c ****     uint8_t bytes[2];
+  63:Core/Src/main.c ****     init_AudioReset();
+  64:Core/Src/main.c **** 
+  65:Core/Src/main.c ****     bytes[0] = 0x02;
+  66:Core/Src/main.c ****     bytes[1] = 0x01;
+  67:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+  68:Core/Src/main.c **** 
+  69:Core/Src/main.c ****     bytes[0] = 0x00;
+  70:Core/Src/main.c ****     bytes[1] = 0x99;
+  71:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+  72:Core/Src/main.c **** 
+  73:Core/Src/main.c ****     bytes[0] = 0x47;
+  74:Core/Src/main.c ****     bytes[1] = 0x80;
+  75:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+  76:Core/Src/main.c **** 
+  77:Core/Src/main.c ****     bytes[0] = 0x32;
+  78:Core/Src/main.c ****     bytes[1] = 0x80;
+  79:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+  80:Core/Src/main.c **** 
+  81:Core/Src/main.c ****     bytes[0] = 0x32;
+  82:Core/Src/main.c ****     bytes[1] = 0x0;
+  83:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+  84:Core/Src/main.c **** 
+  85:Core/Src/main.c ****     bytes[0] = 0x04;
+  86:Core/Src/main.c ****     bytes[1] = 0xAF;
+  87:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ARM GAS  /tmp/cc1r2KjE.s 			page 3
+
+
+  88:Core/Src/main.c **** 
+  89:Core/Src/main.c ****     bytes[0] = 0x0D;
+  90:Core/Src/main.c ****     bytes[1] = 0x70;
+  91:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+  92:Core/Src/main.c **** 
+  93:Core/Src/main.c ****     bytes[0] = 0x05;
+  94:Core/Src/main.c ****     bytes[1] = 0x81;
+  95:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+  96:Core/Src/main.c **** 
+  97:Core/Src/main.c ****     bytes[0] = 0x06;
+  98:Core/Src/main.c ****     bytes[1] = 0x07;
+  99:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 100:Core/Src/main.c **** 
+ 101:Core/Src/main.c ****     bytes[0] = 0x0A;
+ 102:Core/Src/main.c ****     bytes[1] = 0x00;
+ 103:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 104:Core/Src/main.c **** 
+ 105:Core/Src/main.c ****     bytes[0] = 0x27;
+ 106:Core/Src/main.c ****     bytes[1] = 0x00;
+ 107:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 108:Core/Src/main.c **** 
+ 109:Core/Src/main.c ****     bytes[0] = 0x1F;
+ 110:Core/Src/main.c ****     bytes[1] = 0x0F;
+ 111:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 112:Core/Src/main.c **** 
+ 113:Core/Src/main.c ****     bytes[0] = 0x22;
+ 114:Core/Src/main.c ****     bytes[1] = 0xC0;
+ 115:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 116:Core/Src/main.c **** 
+ 117:Core/Src/main.c ****     bytes[0] = 0x14;
+ 118:Core/Src/main.c ****     bytes[1] = 2;
+ 119:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 120:Core/Src/main.c **** 
+ 121:Core/Src/main.c ****     bytes[0] = 0x15;
+ 122:Core/Src/main.c ****     bytes[1] = 2;
+ 123:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 124:Core/Src/main.c **** 
+ 125:Core/Src/main.c ****     bytes[0] = 0x20;
+ 126:Core/Src/main.c ****     bytes[1] = 24;
+ 127:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 128:Core/Src/main.c **** 
+ 129:Core/Src/main.c ****     bytes[0] = 0x21;
+ 130:Core/Src/main.c ****     bytes[1] = 24;
+ 131:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 132:Core/Src/main.c **** 
+ 133:Core/Src/main.c ****     bytes[0] = 0x02;
+ 134:Core/Src/main.c ****     bytes[1] = 0x9E;
+ 135:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 136:Core/Src/main.c **** }
+ 137:Core/Src/main.c **** 
+ 138:Core/Src/main.c **** void init_AudioReset(){
+  29              		.loc 1 138 23 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33 0000 08B5     		push	{r3, lr}
+  34              	.LCFI0:
+ARM GAS  /tmp/cc1r2KjE.s 			page 4
+
+
+  35              		.cfi_def_cfa_offset 8
+  36              		.cfi_offset 3, -8
+  37              		.cfi_offset 14, -4
+ 139:Core/Src/main.c ****     HAL_GPIO_WritePin(GPIOD, AUDIO_RESET_PIN, GPIO_PIN_SET);
+  38              		.loc 1 139 5 view .LVU1
+  39 0002 0122     		movs	r2, #1
+  40 0004 1021     		movs	r1, #16
+  41 0006 0248     		ldr	r0, .L3
+  42 0008 FFF7FEFF 		bl	HAL_GPIO_WritePin
+  43              	.LVL0:
+ 140:Core/Src/main.c **** }
+  44              		.loc 1 140 1 is_stmt 0 view .LVU2
+  45 000c 08BD     		pop	{r3, pc}
+  46              	.L4:
+  47 000e 00BF     		.align	2
+  48              	.L3:
+  49 0010 000C0240 		.word	1073875968
+  50              		.cfi_endproc
+  51              	.LFE131:
+  53              		.section	.text.configAudio,"ax",%progbits
+  54              		.align	1
+  55              		.global	configAudio
+  56              		.syntax unified
+  57              		.thumb
+  58              		.thumb_func
+  59              		.fpu fpv4-sp-d16
+  61              	configAudio:
+  62              	.LFB130:
+  61:Core/Src/main.c ****     uint8_t bytes[2];
+  63              		.loc 1 61 19 is_stmt 1 view -0
+  64              		.cfi_startproc
+  65              		@ args = 0, pretend = 0, frame = 8
+  66              		@ frame_needed = 0, uses_anonymous_args = 0
+  67 0000 2DE9F043 		push	{r4, r5, r6, r7, r8, r9, lr}
+  68              	.LCFI1:
+  69              		.cfi_def_cfa_offset 28
+  70              		.cfi_offset 4, -28
+  71              		.cfi_offset 5, -24
+  72              		.cfi_offset 6, -20
+  73              		.cfi_offset 7, -16
+  74              		.cfi_offset 8, -12
+  75              		.cfi_offset 9, -8
+  76              		.cfi_offset 14, -4
+  77 0004 85B0     		sub	sp, sp, #20
+  78              	.LCFI2:
+  79              		.cfi_def_cfa_offset 48
+  62:Core/Src/main.c ****     init_AudioReset();
+  80              		.loc 1 62 5 view .LVU4
+  63:Core/Src/main.c **** 
+  81              		.loc 1 63 5 view .LVU5
+  82 0006 FFF7FEFF 		bl	init_AudioReset
+  83              	.LVL1:
+  65:Core/Src/main.c ****     bytes[1] = 0x01;
+  84              		.loc 1 65 5 view .LVU6
+  65:Core/Src/main.c ****     bytes[1] = 0x01;
+  85              		.loc 1 65 14 is_stmt 0 view .LVU7
+  86 000a 0224     		movs	r4, #2
+ARM GAS  /tmp/cc1r2KjE.s 			page 5
+
+
+  87 000c 8DF80C40 		strb	r4, [sp, #12]
+  66:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+  88              		.loc 1 66 5 is_stmt 1 view .LVU8
+  66:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+  89              		.loc 1 66 14 is_stmt 0 view .LVU9
+  90 0010 0123     		movs	r3, #1
+  91 0012 8DF80D30 		strb	r3, [sp, #13]
+  67:Core/Src/main.c **** 
+  92              		.loc 1 67 5 is_stmt 1 view .LVU10
+  93 0016 714D     		ldr	r5, .L7
+  94 0018 6426     		movs	r6, #100
+  95 001a 0096     		str	r6, [sp]
+  96 001c 2346     		mov	r3, r4
+  97 001e 03AA     		add	r2, sp, #12
+  98 0020 9421     		movs	r1, #148
+  99 0022 2846     		mov	r0, r5
+ 100 0024 FFF7FEFF 		bl	HAL_I2C_Master_Transmit
+ 101              	.LVL2:
+  69:Core/Src/main.c ****     bytes[1] = 0x99;
+ 102              		.loc 1 69 5 view .LVU11
+  69:Core/Src/main.c ****     bytes[1] = 0x99;
+ 103              		.loc 1 69 14 is_stmt 0 view .LVU12
+ 104 0028 0027     		movs	r7, #0
+ 105 002a 8DF80C70 		strb	r7, [sp, #12]
+  70:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 106              		.loc 1 70 5 is_stmt 1 view .LVU13
+  70:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 107              		.loc 1 70 14 is_stmt 0 view .LVU14
+ 108 002e 9923     		movs	r3, #153
+ 109 0030 8DF80D30 		strb	r3, [sp, #13]
+  71:Core/Src/main.c **** 
+ 110              		.loc 1 71 5 is_stmt 1 view .LVU15
+ 111 0034 0096     		str	r6, [sp]
+ 112 0036 2346     		mov	r3, r4
+ 113 0038 03AA     		add	r2, sp, #12
+ 114 003a 9421     		movs	r1, #148
+ 115 003c 2846     		mov	r0, r5
+ 116 003e FFF7FEFF 		bl	HAL_I2C_Master_Transmit
+ 117              	.LVL3:
+  73:Core/Src/main.c ****     bytes[1] = 0x80;
+ 118              		.loc 1 73 5 view .LVU16
+  73:Core/Src/main.c ****     bytes[1] = 0x80;
+ 119              		.loc 1 73 14 is_stmt 0 view .LVU17
+ 120 0042 4723     		movs	r3, #71
+ 121 0044 8DF80C30 		strb	r3, [sp, #12]
+  74:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 122              		.loc 1 74 5 is_stmt 1 view .LVU18
+  74:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 123              		.loc 1 74 14 is_stmt 0 view .LVU19
+ 124 0048 4FF08009 		mov	r9, #128
+ 125 004c 8DF80D90 		strb	r9, [sp, #13]
+  75:Core/Src/main.c **** 
+ 126              		.loc 1 75 5 is_stmt 1 view .LVU20
+ 127 0050 0096     		str	r6, [sp]
+ 128 0052 2346     		mov	r3, r4
+ 129 0054 03AA     		add	r2, sp, #12
+ 130 0056 9421     		movs	r1, #148
+ARM GAS  /tmp/cc1r2KjE.s 			page 6
+
+
+ 131 0058 2846     		mov	r0, r5
+ 132 005a FFF7FEFF 		bl	HAL_I2C_Master_Transmit
+ 133              	.LVL4:
+  77:Core/Src/main.c ****     bytes[1] = 0x80;
+ 134              		.loc 1 77 5 view .LVU21
+  77:Core/Src/main.c ****     bytes[1] = 0x80;
+ 135              		.loc 1 77 14 is_stmt 0 view .LVU22
+ 136 005e 4FF03208 		mov	r8, #50
+ 137 0062 8DF80C80 		strb	r8, [sp, #12]
+  78:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 138              		.loc 1 78 5 is_stmt 1 view .LVU23
+  78:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 139              		.loc 1 78 14 is_stmt 0 view .LVU24
+ 140 0066 8DF80D90 		strb	r9, [sp, #13]
+  79:Core/Src/main.c **** 
+ 141              		.loc 1 79 5 is_stmt 1 view .LVU25
+ 142 006a 0096     		str	r6, [sp]
+ 143 006c 2346     		mov	r3, r4
+ 144 006e 03AA     		add	r2, sp, #12
+ 145 0070 9421     		movs	r1, #148
+ 146 0072 2846     		mov	r0, r5
+ 147 0074 FFF7FEFF 		bl	HAL_I2C_Master_Transmit
+ 148              	.LVL5:
+  81:Core/Src/main.c ****     bytes[1] = 0x0;
+ 149              		.loc 1 81 5 view .LVU26
+  81:Core/Src/main.c ****     bytes[1] = 0x0;
+ 150              		.loc 1 81 14 is_stmt 0 view .LVU27
+ 151 0078 8DF80C80 		strb	r8, [sp, #12]
+  82:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 152              		.loc 1 82 5 is_stmt 1 view .LVU28
+  82:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 153              		.loc 1 82 14 is_stmt 0 view .LVU29
+ 154 007c 8DF80D70 		strb	r7, [sp, #13]
+  83:Core/Src/main.c **** 
+ 155              		.loc 1 83 5 is_stmt 1 view .LVU30
+ 156 0080 0096     		str	r6, [sp]
+ 157 0082 2346     		mov	r3, r4
+ 158 0084 03AA     		add	r2, sp, #12
+ 159 0086 9421     		movs	r1, #148
+ 160 0088 2846     		mov	r0, r5
+ 161 008a FFF7FEFF 		bl	HAL_I2C_Master_Transmit
+ 162              	.LVL6:
+  85:Core/Src/main.c ****     bytes[1] = 0xAF;
+ 163              		.loc 1 85 5 view .LVU31
+  85:Core/Src/main.c ****     bytes[1] = 0xAF;
+ 164              		.loc 1 85 14 is_stmt 0 view .LVU32
+ 165 008e 0423     		movs	r3, #4
+ 166 0090 8DF80C30 		strb	r3, [sp, #12]
+  86:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 167              		.loc 1 86 5 is_stmt 1 view .LVU33
+  86:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 168              		.loc 1 86 14 is_stmt 0 view .LVU34
+ 169 0094 AF23     		movs	r3, #175
+ 170 0096 8DF80D30 		strb	r3, [sp, #13]
+  87:Core/Src/main.c **** 
+ 171              		.loc 1 87 5 is_stmt 1 view .LVU35
+ 172 009a 0096     		str	r6, [sp]
+ARM GAS  /tmp/cc1r2KjE.s 			page 7
+
+
+ 173 009c 2346     		mov	r3, r4
+ 174 009e 03AA     		add	r2, sp, #12
+ 175 00a0 9421     		movs	r1, #148
+ 176 00a2 2846     		mov	r0, r5
+ 177 00a4 FFF7FEFF 		bl	HAL_I2C_Master_Transmit
+ 178              	.LVL7:
+  89:Core/Src/main.c ****     bytes[1] = 0x70;
+ 179              		.loc 1 89 5 view .LVU36
+  89:Core/Src/main.c ****     bytes[1] = 0x70;
+ 180              		.loc 1 89 14 is_stmt 0 view .LVU37
+ 181 00a8 0D23     		movs	r3, #13
+ 182 00aa 8DF80C30 		strb	r3, [sp, #12]
+  90:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 183              		.loc 1 90 5 is_stmt 1 view .LVU38
+  90:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 184              		.loc 1 90 14 is_stmt 0 view .LVU39
+ 185 00ae 7023     		movs	r3, #112
+ 186 00b0 8DF80D30 		strb	r3, [sp, #13]
+  91:Core/Src/main.c **** 
+ 187              		.loc 1 91 5 is_stmt 1 view .LVU40
+ 188 00b4 0096     		str	r6, [sp]
+ 189 00b6 2346     		mov	r3, r4
+ 190 00b8 03AA     		add	r2, sp, #12
+ 191 00ba 9421     		movs	r1, #148
+ 192 00bc 2846     		mov	r0, r5
+ 193 00be FFF7FEFF 		bl	HAL_I2C_Master_Transmit
+ 194              	.LVL8:
+  93:Core/Src/main.c ****     bytes[1] = 0x81;
+ 195              		.loc 1 93 5 view .LVU41
+  93:Core/Src/main.c ****     bytes[1] = 0x81;
+ 196              		.loc 1 93 14 is_stmt 0 view .LVU42
+ 197 00c2 0523     		movs	r3, #5
+ 198 00c4 8DF80C30 		strb	r3, [sp, #12]
+  94:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 199              		.loc 1 94 5 is_stmt 1 view .LVU43
+  94:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 200              		.loc 1 94 14 is_stmt 0 view .LVU44
+ 201 00c8 8123     		movs	r3, #129
+ 202 00ca 8DF80D30 		strb	r3, [sp, #13]
+  95:Core/Src/main.c **** 
+ 203              		.loc 1 95 5 is_stmt 1 view .LVU45
+ 204 00ce 0096     		str	r6, [sp]
+ 205 00d0 2346     		mov	r3, r4
+ 206 00d2 03AA     		add	r2, sp, #12
+ 207 00d4 9421     		movs	r1, #148
+ 208 00d6 2846     		mov	r0, r5
+ 209 00d8 FFF7FEFF 		bl	HAL_I2C_Master_Transmit
+ 210              	.LVL9:
+  97:Core/Src/main.c ****     bytes[1] = 0x07;
+ 211              		.loc 1 97 5 view .LVU46
+  97:Core/Src/main.c ****     bytes[1] = 0x07;
+ 212              		.loc 1 97 14 is_stmt 0 view .LVU47
+ 213 00dc 0623     		movs	r3, #6
+ 214 00de 8DF80C30 		strb	r3, [sp, #12]
+  98:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 215              		.loc 1 98 5 is_stmt 1 view .LVU48
+  98:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ARM GAS  /tmp/cc1r2KjE.s 			page 8
+
+
+ 216              		.loc 1 98 14 is_stmt 0 view .LVU49
+ 217 00e2 0723     		movs	r3, #7
+ 218 00e4 8DF80D30 		strb	r3, [sp, #13]
+  99:Core/Src/main.c **** 
+ 219              		.loc 1 99 5 is_stmt 1 view .LVU50
+ 220 00e8 0096     		str	r6, [sp]
+ 221 00ea 2346     		mov	r3, r4
+ 222 00ec 03AA     		add	r2, sp, #12
+ 223 00ee 9421     		movs	r1, #148
+ 224 00f0 2846     		mov	r0, r5
+ 225 00f2 FFF7FEFF 		bl	HAL_I2C_Master_Transmit
+ 226              	.LVL10:
+ 101:Core/Src/main.c ****     bytes[1] = 0x00;
+ 227              		.loc 1 101 5 view .LVU51
+ 101:Core/Src/main.c ****     bytes[1] = 0x00;
+ 228              		.loc 1 101 14 is_stmt 0 view .LVU52
+ 229 00f6 0A23     		movs	r3, #10
+ 230 00f8 8DF80C30 		strb	r3, [sp, #12]
+ 102:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 231              		.loc 1 102 5 is_stmt 1 view .LVU53
+ 102:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 232              		.loc 1 102 14 is_stmt 0 view .LVU54
+ 233 00fc 8DF80D70 		strb	r7, [sp, #13]
+ 103:Core/Src/main.c **** 
+ 234              		.loc 1 103 5 is_stmt 1 view .LVU55
+ 235 0100 0096     		str	r6, [sp]
+ 236 0102 2346     		mov	r3, r4
+ 237 0104 03AA     		add	r2, sp, #12
+ 238 0106 9421     		movs	r1, #148
+ 239 0108 2846     		mov	r0, r5
+ 240 010a FFF7FEFF 		bl	HAL_I2C_Master_Transmit
+ 241              	.LVL11:
+ 105:Core/Src/main.c ****     bytes[1] = 0x00;
+ 242              		.loc 1 105 5 view .LVU56
+ 105:Core/Src/main.c ****     bytes[1] = 0x00;
+ 243              		.loc 1 105 14 is_stmt 0 view .LVU57
+ 244 010e 2723     		movs	r3, #39
+ 245 0110 8DF80C30 		strb	r3, [sp, #12]
+ 106:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 246              		.loc 1 106 5 is_stmt 1 view .LVU58
+ 106:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 247              		.loc 1 106 14 is_stmt 0 view .LVU59
+ 248 0114 8DF80D70 		strb	r7, [sp, #13]
+ 107:Core/Src/main.c **** 
+ 249              		.loc 1 107 5 is_stmt 1 view .LVU60
+ 250 0118 0096     		str	r6, [sp]
+ 251 011a 2346     		mov	r3, r4
+ 252 011c 03AA     		add	r2, sp, #12
+ 253 011e 9421     		movs	r1, #148
+ 254 0120 2846     		mov	r0, r5
+ 255 0122 FFF7FEFF 		bl	HAL_I2C_Master_Transmit
+ 256              	.LVL12:
+ 109:Core/Src/main.c ****     bytes[1] = 0x0F;
+ 257              		.loc 1 109 5 view .LVU61
+ 109:Core/Src/main.c ****     bytes[1] = 0x0F;
+ 258              		.loc 1 109 14 is_stmt 0 view .LVU62
+ 259 0126 1F23     		movs	r3, #31
+ARM GAS  /tmp/cc1r2KjE.s 			page 9
+
+
+ 260 0128 8DF80C30 		strb	r3, [sp, #12]
+ 110:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 261              		.loc 1 110 5 is_stmt 1 view .LVU63
+ 110:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 262              		.loc 1 110 14 is_stmt 0 view .LVU64
+ 263 012c 0F23     		movs	r3, #15
+ 264 012e 8DF80D30 		strb	r3, [sp, #13]
+ 111:Core/Src/main.c **** 
+ 265              		.loc 1 111 5 is_stmt 1 view .LVU65
+ 266 0132 0096     		str	r6, [sp]
+ 267 0134 2346     		mov	r3, r4
+ 268 0136 03AA     		add	r2, sp, #12
+ 269 0138 9421     		movs	r1, #148
+ 270 013a 2846     		mov	r0, r5
+ 271 013c FFF7FEFF 		bl	HAL_I2C_Master_Transmit
+ 272              	.LVL13:
+ 113:Core/Src/main.c ****     bytes[1] = 0xC0;
+ 273              		.loc 1 113 5 view .LVU66
+ 113:Core/Src/main.c ****     bytes[1] = 0xC0;
+ 274              		.loc 1 113 14 is_stmt 0 view .LVU67
+ 275 0140 2223     		movs	r3, #34
+ 276 0142 8DF80C30 		strb	r3, [sp, #12]
+ 114:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 277              		.loc 1 114 5 is_stmt 1 view .LVU68
+ 114:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 278              		.loc 1 114 14 is_stmt 0 view .LVU69
+ 279 0146 C023     		movs	r3, #192
+ 280 0148 8DF80D30 		strb	r3, [sp, #13]
+ 115:Core/Src/main.c **** 
+ 281              		.loc 1 115 5 is_stmt 1 view .LVU70
+ 282 014c 0096     		str	r6, [sp]
+ 283 014e 2346     		mov	r3, r4
+ 284 0150 03AA     		add	r2, sp, #12
+ 285 0152 9421     		movs	r1, #148
+ 286 0154 2846     		mov	r0, r5
+ 287 0156 FFF7FEFF 		bl	HAL_I2C_Master_Transmit
+ 288              	.LVL14:
+ 117:Core/Src/main.c ****     bytes[1] = 2;
+ 289              		.loc 1 117 5 view .LVU71
+ 117:Core/Src/main.c ****     bytes[1] = 2;
+ 290              		.loc 1 117 14 is_stmt 0 view .LVU72
+ 291 015a 1423     		movs	r3, #20
+ 292 015c 8DF80C30 		strb	r3, [sp, #12]
+ 118:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 293              		.loc 1 118 5 is_stmt 1 view .LVU73
+ 118:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 294              		.loc 1 118 14 is_stmt 0 view .LVU74
+ 295 0160 8DF80D40 		strb	r4, [sp, #13]
+ 119:Core/Src/main.c **** 
+ 296              		.loc 1 119 5 is_stmt 1 view .LVU75
+ 297 0164 0096     		str	r6, [sp]
+ 298 0166 2346     		mov	r3, r4
+ 299 0168 03AA     		add	r2, sp, #12
+ 300 016a 9421     		movs	r1, #148
+ 301 016c 2846     		mov	r0, r5
+ 302 016e FFF7FEFF 		bl	HAL_I2C_Master_Transmit
+ 303              	.LVL15:
+ARM GAS  /tmp/cc1r2KjE.s 			page 10
+
+
+ 121:Core/Src/main.c ****     bytes[1] = 2;
+ 304              		.loc 1 121 5 view .LVU76
+ 121:Core/Src/main.c ****     bytes[1] = 2;
+ 305              		.loc 1 121 14 is_stmt 0 view .LVU77
+ 306 0172 1523     		movs	r3, #21
+ 307 0174 8DF80C30 		strb	r3, [sp, #12]
+ 122:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 308              		.loc 1 122 5 is_stmt 1 view .LVU78
+ 122:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 309              		.loc 1 122 14 is_stmt 0 view .LVU79
+ 310 0178 8DF80D40 		strb	r4, [sp, #13]
+ 123:Core/Src/main.c **** 
+ 311              		.loc 1 123 5 is_stmt 1 view .LVU80
+ 312 017c 0096     		str	r6, [sp]
+ 313 017e 2346     		mov	r3, r4
+ 314 0180 03AA     		add	r2, sp, #12
+ 315 0182 9421     		movs	r1, #148
+ 316 0184 2846     		mov	r0, r5
+ 317 0186 FFF7FEFF 		bl	HAL_I2C_Master_Transmit
+ 318              	.LVL16:
+ 125:Core/Src/main.c ****     bytes[1] = 24;
+ 319              		.loc 1 125 5 view .LVU81
+ 125:Core/Src/main.c ****     bytes[1] = 24;
+ 320              		.loc 1 125 14 is_stmt 0 view .LVU82
+ 321 018a 2023     		movs	r3, #32
+ 322 018c 8DF80C30 		strb	r3, [sp, #12]
+ 126:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 323              		.loc 1 126 5 is_stmt 1 view .LVU83
+ 126:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 324              		.loc 1 126 14 is_stmt 0 view .LVU84
+ 325 0190 1827     		movs	r7, #24
+ 326 0192 8DF80D70 		strb	r7, [sp, #13]
+ 127:Core/Src/main.c **** 
+ 327              		.loc 1 127 5 is_stmt 1 view .LVU85
+ 328 0196 0096     		str	r6, [sp]
+ 329 0198 2346     		mov	r3, r4
+ 330 019a 03AA     		add	r2, sp, #12
+ 331 019c 9421     		movs	r1, #148
+ 332 019e 2846     		mov	r0, r5
+ 333 01a0 FFF7FEFF 		bl	HAL_I2C_Master_Transmit
+ 334              	.LVL17:
+ 129:Core/Src/main.c ****     bytes[1] = 24;
+ 335              		.loc 1 129 5 view .LVU86
+ 129:Core/Src/main.c ****     bytes[1] = 24;
+ 336              		.loc 1 129 14 is_stmt 0 view .LVU87
+ 337 01a4 2123     		movs	r3, #33
+ 338 01a6 8DF80C30 		strb	r3, [sp, #12]
+ 130:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 339              		.loc 1 130 5 is_stmt 1 view .LVU88
+ 130:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 340              		.loc 1 130 14 is_stmt 0 view .LVU89
+ 341 01aa 8DF80D70 		strb	r7, [sp, #13]
+ 131:Core/Src/main.c **** 
+ 342              		.loc 1 131 5 is_stmt 1 view .LVU90
+ 343 01ae 0096     		str	r6, [sp]
+ 344 01b0 2346     		mov	r3, r4
+ 345 01b2 03AA     		add	r2, sp, #12
+ARM GAS  /tmp/cc1r2KjE.s 			page 11
+
+
+ 346 01b4 9421     		movs	r1, #148
+ 347 01b6 2846     		mov	r0, r5
+ 348 01b8 FFF7FEFF 		bl	HAL_I2C_Master_Transmit
+ 349              	.LVL18:
+ 133:Core/Src/main.c ****     bytes[1] = 0x9E;
+ 350              		.loc 1 133 5 view .LVU91
+ 133:Core/Src/main.c ****     bytes[1] = 0x9E;
+ 351              		.loc 1 133 14 is_stmt 0 view .LVU92
+ 352 01bc 8DF80C40 		strb	r4, [sp, #12]
+ 134:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 353              		.loc 1 134 5 is_stmt 1 view .LVU93
+ 134:Core/Src/main.c ****     HAL_I2C_Master_Transmit(&hi2c1, AUDIO_I2C_ADDRESS, bytes, 2, 100);
+ 354              		.loc 1 134 14 is_stmt 0 view .LVU94
+ 355 01c0 9E23     		movs	r3, #158
+ 356 01c2 8DF80D30 		strb	r3, [sp, #13]
+ 135:Core/Src/main.c **** }
+ 357              		.loc 1 135 5 is_stmt 1 view .LVU95
+ 358 01c6 0096     		str	r6, [sp]
+ 359 01c8 2346     		mov	r3, r4
+ 360 01ca 03AA     		add	r2, sp, #12
+ 361 01cc 9421     		movs	r1, #148
+ 362 01ce 2846     		mov	r0, r5
+ 363 01d0 FFF7FEFF 		bl	HAL_I2C_Master_Transmit
+ 364              	.LVL19:
+ 136:Core/Src/main.c **** 
+ 365              		.loc 1 136 1 is_stmt 0 view .LVU96
+ 366 01d4 05B0     		add	sp, sp, #20
+ 367              	.LCFI3:
+ 368              		.cfi_def_cfa_offset 28
+ 369              		@ sp needed
+ 370 01d6 BDE8F083 		pop	{r4, r5, r6, r7, r8, r9, pc}
+ 371              	.L8:
+ 372 01da 00BF     		.align	2
+ 373              	.L7:
+ 374 01dc 00000000 		.word	hi2c1
+ 375              		.cfi_endproc
+ 376              	.LFE130:
+ 378              		.section	.text.Error_Handler,"ax",%progbits
+ 379              		.align	1
+ 380              		.global	Error_Handler
+ 381              		.syntax unified
+ 382              		.thumb
+ 383              		.thumb_func
+ 384              		.fpu fpv4-sp-d16
+ 386              	Error_Handler:
+ 387              	.LFB134:
+ 141:Core/Src/main.c **** 
+ 142:Core/Src/main.c **** /* USER CODE END 0 */
+ 143:Core/Src/main.c **** 
+ 144:Core/Src/main.c **** /**
+ 145:Core/Src/main.c ****   * @brief  The application entry point.
+ 146:Core/Src/main.c ****   * @retval int
+ 147:Core/Src/main.c ****   */
+ 148:Core/Src/main.c **** int main(void)
+ 149:Core/Src/main.c **** {
+ 150:Core/Src/main.c ****   /* USER CODE BEGIN 1 */
+ 151:Core/Src/main.c **** 
+ARM GAS  /tmp/cc1r2KjE.s 			page 12
+
+
+ 152:Core/Src/main.c ****   /* USER CODE END 1 */
+ 153:Core/Src/main.c **** 
+ 154:Core/Src/main.c ****   /* MCU Configuration--------------------------------------------------------*/
+ 155:Core/Src/main.c **** 
+ 156:Core/Src/main.c ****   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+ 157:Core/Src/main.c ****   HAL_Init();
+ 158:Core/Src/main.c **** 
+ 159:Core/Src/main.c ****   /* USER CODE BEGIN Init */
+ 160:Core/Src/main.c **** 
+ 161:Core/Src/main.c ****   /* USER CODE END Init */
+ 162:Core/Src/main.c **** 
+ 163:Core/Src/main.c ****   /* Configure the system clock */
+ 164:Core/Src/main.c ****   SystemClock_Config();
+ 165:Core/Src/main.c **** 
+ 166:Core/Src/main.c ****   /* USER CODE BEGIN SysInit */
+ 167:Core/Src/main.c **** 
+ 168:Core/Src/main.c ****   /* USER CODE END SysInit */
+ 169:Core/Src/main.c **** 
+ 170:Core/Src/main.c ****   /* Initialize all configured peripherals */
+ 171:Core/Src/main.c ****   MX_GPIO_Init();
+ 172:Core/Src/main.c ****   MX_I2C1_Init();
+ 173:Core/Src/main.c ****   MX_I2S3_Init();
+ 174:Core/Src/main.c ****   /* USER CODE BEGIN 2 */
+ 175:Core/Src/main.c ****   configAudio();
+ 176:Core/Src/main.c ****   uint16_t signal;
+ 177:Core/Src/main.c ****   /* USER CODE END 2 */
+ 178:Core/Src/main.c **** 
+ 179:Core/Src/main.c ****   /* Infinite loop */
+ 180:Core/Src/main.c ****   /* USER CODE BEGIN WHILE */
+ 181:Core/Src/main.c ****   while (1)
+ 182:Core/Src/main.c ****   {
+ 183:Core/Src/main.c ****     signal = rand();
+ 184:Core/Src/main.c ****     HAL_I2S_Transmit(&hi2s3, &signal, 1, 10);
+ 185:Core/Src/main.c ****     /* USER CODE END WHILE */
+ 186:Core/Src/main.c **** 
+ 187:Core/Src/main.c ****     /* USER CODE BEGIN 3 */
+ 188:Core/Src/main.c ****   }
+ 189:Core/Src/main.c ****   /* USER CODE END 3 */
+ 190:Core/Src/main.c **** }
+ 191:Core/Src/main.c **** 
+ 192:Core/Src/main.c **** /**
+ 193:Core/Src/main.c ****   * @brief System Clock Configuration
+ 194:Core/Src/main.c ****   * @retval None
+ 195:Core/Src/main.c ****   */
+ 196:Core/Src/main.c **** void SystemClock_Config(void)
+ 197:Core/Src/main.c **** {
+ 198:Core/Src/main.c ****   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+ 199:Core/Src/main.c ****   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+ 200:Core/Src/main.c **** 
+ 201:Core/Src/main.c ****   /** Configure the main internal regulator output voltage
+ 202:Core/Src/main.c ****   */
+ 203:Core/Src/main.c ****   __HAL_RCC_PWR_CLK_ENABLE();
+ 204:Core/Src/main.c ****   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+ 205:Core/Src/main.c ****   /** Initializes the RCC Oscillators according to the specified parameters
+ 206:Core/Src/main.c ****   * in the RCC_OscInitTypeDef structure.
+ 207:Core/Src/main.c ****   */
+ 208:Core/Src/main.c ****   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+ARM GAS  /tmp/cc1r2KjE.s 			page 13
+
+
+ 209:Core/Src/main.c ****   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+ 210:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+ 211:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+ 212:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLM = 4;
+ 213:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLN = 168;
+ 214:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
+ 215:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLQ = 4;
+ 216:Core/Src/main.c ****   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+ 217:Core/Src/main.c ****   {
+ 218:Core/Src/main.c ****     Error_Handler();
+ 219:Core/Src/main.c ****   }
+ 220:Core/Src/main.c ****   /** Initializes the CPU, AHB and APB buses clocks
+ 221:Core/Src/main.c ****   */
+ 222:Core/Src/main.c ****   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+ 223:Core/Src/main.c ****                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+ 224:Core/Src/main.c ****   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+ 225:Core/Src/main.c ****   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+ 226:Core/Src/main.c ****   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
+ 227:Core/Src/main.c ****   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
+ 228:Core/Src/main.c **** 
+ 229:Core/Src/main.c ****   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5) != HAL_OK)
+ 230:Core/Src/main.c ****   {
+ 231:Core/Src/main.c ****     Error_Handler();
+ 232:Core/Src/main.c ****   }
+ 233:Core/Src/main.c **** }
+ 234:Core/Src/main.c **** 
+ 235:Core/Src/main.c **** /* USER CODE BEGIN 4 */
+ 236:Core/Src/main.c **** 
+ 237:Core/Src/main.c **** /* USER CODE END 4 */
+ 238:Core/Src/main.c **** 
+ 239:Core/Src/main.c **** /**
+ 240:Core/Src/main.c ****   * @brief  This function is executed in case of error occurrence.
+ 241:Core/Src/main.c ****   * @retval None
+ 242:Core/Src/main.c ****   */
+ 243:Core/Src/main.c **** void Error_Handler(void)
+ 244:Core/Src/main.c **** {
+ 388              		.loc 1 244 1 is_stmt 1 view -0
+ 389              		.cfi_startproc
+ 390              		@ Volatile: function does not return.
+ 391              		@ args = 0, pretend = 0, frame = 0
+ 392              		@ frame_needed = 0, uses_anonymous_args = 0
+ 393              		@ link register save eliminated.
+ 245:Core/Src/main.c ****   /* USER CODE BEGIN Error_Handler_Debug */
+ 246:Core/Src/main.c ****   /* User can add his own implementation to report the HAL error return state */
+ 247:Core/Src/main.c ****   __disable_irq();
+ 394              		.loc 1 247 3 view .LVU98
+ 395              	.LBB4:
+ 396              	.LBI4:
+ 397              		.file 2 "Drivers/CMSIS/Include/cmsis_gcc.h"
+   1:Drivers/CMSIS/Include/cmsis_gcc.h **** /**************************************************************************//**
+   2:Drivers/CMSIS/Include/cmsis_gcc.h ****  * @file     cmsis_gcc.h
+   3:Drivers/CMSIS/Include/cmsis_gcc.h ****  * @brief    CMSIS compiler GCC header file
+   4:Drivers/CMSIS/Include/cmsis_gcc.h ****  * @version  V5.0.4
+   5:Drivers/CMSIS/Include/cmsis_gcc.h ****  * @date     09. April 2018
+   6:Drivers/CMSIS/Include/cmsis_gcc.h ****  ******************************************************************************/
+   7:Drivers/CMSIS/Include/cmsis_gcc.h **** /*
+   8:Drivers/CMSIS/Include/cmsis_gcc.h ****  * Copyright (c) 2009-2018 Arm Limited. All rights reserved.
+ARM GAS  /tmp/cc1r2KjE.s 			page 14
+
+
+   9:Drivers/CMSIS/Include/cmsis_gcc.h ****  *
+  10:Drivers/CMSIS/Include/cmsis_gcc.h ****  * SPDX-License-Identifier: Apache-2.0
+  11:Drivers/CMSIS/Include/cmsis_gcc.h ****  *
+  12:Drivers/CMSIS/Include/cmsis_gcc.h ****  * Licensed under the Apache License, Version 2.0 (the License); you may
+  13:Drivers/CMSIS/Include/cmsis_gcc.h ****  * not use this file except in compliance with the License.
+  14:Drivers/CMSIS/Include/cmsis_gcc.h ****  * You may obtain a copy of the License at
+  15:Drivers/CMSIS/Include/cmsis_gcc.h ****  *
+  16:Drivers/CMSIS/Include/cmsis_gcc.h ****  * www.apache.org/licenses/LICENSE-2.0
+  17:Drivers/CMSIS/Include/cmsis_gcc.h ****  *
+  18:Drivers/CMSIS/Include/cmsis_gcc.h ****  * Unless required by applicable law or agreed to in writing, software
+  19:Drivers/CMSIS/Include/cmsis_gcc.h ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  20:Drivers/CMSIS/Include/cmsis_gcc.h ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  21:Drivers/CMSIS/Include/cmsis_gcc.h ****  * See the License for the specific language governing permissions and
+  22:Drivers/CMSIS/Include/cmsis_gcc.h ****  * limitations under the License.
+  23:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+  24:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+  25:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef __CMSIS_GCC_H
+  26:Drivers/CMSIS/Include/cmsis_gcc.h **** #define __CMSIS_GCC_H
+  27:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+  28:Drivers/CMSIS/Include/cmsis_gcc.h **** /* ignore some GCC warnings */
+  29:Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic push
+  30:Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wsign-conversion"
+  31:Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wconversion"
+  32:Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wunused-parameter"
+  33:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+  34:Drivers/CMSIS/Include/cmsis_gcc.h **** /* Fallback for __has_builtin */
+  35:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef __has_builtin
+  36:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __has_builtin(x) (0)
+  37:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  38:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+  39:Drivers/CMSIS/Include/cmsis_gcc.h **** /* CMSIS compiler specific defines */
+  40:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __ASM
+  41:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __ASM                                  __asm
+  42:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  43:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __INLINE
+  44:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __INLINE                               inline
+  45:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  46:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __STATIC_INLINE
+  47:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __STATIC_INLINE                        static inline
+  48:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  49:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __STATIC_FORCEINLINE                 
+  50:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __STATIC_FORCEINLINE                   __attribute__((always_inline)) static inline
+  51:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif                                           
+  52:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __NO_RETURN
+  53:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __NO_RETURN                            __attribute__((__noreturn__))
+  54:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  55:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __USED
+  56:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __USED                                 __attribute__((used))
+  57:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  58:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __WEAK
+  59:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __WEAK                                 __attribute__((weak))
+  60:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  61:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __PACKED
+  62:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __PACKED                               __attribute__((packed, aligned(1)))
+  63:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  64:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __PACKED_STRUCT
+  65:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __PACKED_STRUCT                        struct __attribute__((packed, aligned(1)))
+ARM GAS  /tmp/cc1r2KjE.s 			page 15
+
+
+  66:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  67:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __PACKED_UNION
+  68:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __PACKED_UNION                         union __attribute__((packed, aligned(1)))
+  69:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  70:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32        /* deprecated */
+  71:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+  72:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  73:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  74:Drivers/CMSIS/Include/cmsis_gcc.h ****   struct __attribute__((packed)) T_UINT32 { uint32_t v; };
+  75:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+  76:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT32(x)                  (((struct T_UINT32 *)(x))->v)
+  77:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  78:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT16_WRITE
+  79:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+  80:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  81:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  82:Drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT16_WRITE { uint16_t v; };
+  83:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+  84:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT16_WRITE(addr, val)    (void)((((struct T_UINT16_WRITE *)(void *)(addr))-
+  85:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  86:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT16_READ
+  87:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+  88:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  89:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  90:Drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT16_READ { uint16_t v; };
+  91:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+  92:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT16_READ(addr)          (((const struct T_UINT16_READ *)(const void *)(add
+  93:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  94:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32_WRITE
+  95:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+  96:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  97:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  98:Drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT32_WRITE { uint32_t v; };
+  99:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+ 100:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT32_WRITE(addr, val)    (void)((((struct T_UINT32_WRITE *)(void *)(addr))-
+ 101:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 102:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32_READ
+ 103:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+ 104:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+ 105:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+ 106:Drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT32_READ { uint32_t v; };
+ 107:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+ 108:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT32_READ(addr)          (((const struct T_UINT32_READ *)(const void *)(add
+ 109:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 110:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __ALIGNED
+ 111:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __ALIGNED(x)                           __attribute__((aligned(x)))
+ 112:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 113:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __RESTRICT
+ 114:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __RESTRICT                             __restrict
+ 115:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 116:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 117:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 118:Drivers/CMSIS/Include/cmsis_gcc.h **** /* ###########################  Core Function Access  ########################### */
+ 119:Drivers/CMSIS/Include/cmsis_gcc.h **** /** \ingroup  CMSIS_Core_FunctionInterface
+ 120:Drivers/CMSIS/Include/cmsis_gcc.h ****     \defgroup CMSIS_Core_RegAccFunctions CMSIS Core Register Access Functions
+ 121:Drivers/CMSIS/Include/cmsis_gcc.h ****   @{
+ 122:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ARM GAS  /tmp/cc1r2KjE.s 			page 16
+
+
+ 123:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 124:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 125:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Enable IRQ Interrupts
+ 126:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Enables IRQ interrupts by clearing the I-bit in the CPSR.
+ 127:Drivers/CMSIS/Include/cmsis_gcc.h ****            Can only be executed in Privileged modes.
+ 128:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 129:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE void __enable_irq(void)
+ 130:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 131:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("cpsie i" : : : "memory");
+ 132:Drivers/CMSIS/Include/cmsis_gcc.h **** }
+ 133:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 134:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 135:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 136:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Disable IRQ Interrupts
+ 137:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Disables IRQ interrupts by setting the I-bit in the CPSR.
+ 138:Drivers/CMSIS/Include/cmsis_gcc.h ****            Can only be executed in Privileged modes.
+ 139:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 140:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE void __disable_irq(void)
+ 398              		.loc 2 140 27 view .LVU99
+ 399              	.LBB5:
+ 141:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 142:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("cpsid i" : : : "memory");
+ 400              		.loc 2 142 3 view .LVU100
+ 401              		.syntax unified
+ 402              	@ 142 "Drivers/CMSIS/Include/cmsis_gcc.h" 1
+ 403 0000 72B6     		cpsid i
+ 404              	@ 0 "" 2
+ 405              		.thumb
+ 406              		.syntax unified
+ 407              	.L10:
+ 408              	.LBE5:
+ 409              	.LBE4:
+ 248:Core/Src/main.c ****   while (1)
+ 410              		.loc 1 248 3 discriminator 1 view .LVU101
+ 249:Core/Src/main.c ****   {
+ 250:Core/Src/main.c ****   }
+ 411              		.loc 1 250 3 discriminator 1 view .LVU102
+ 248:Core/Src/main.c ****   while (1)
+ 412              		.loc 1 248 9 discriminator 1 view .LVU103
+ 413 0002 FEE7     		b	.L10
+ 414              		.cfi_endproc
+ 415              	.LFE134:
+ 417              		.section	.text.SystemClock_Config,"ax",%progbits
+ 418              		.align	1
+ 419              		.global	SystemClock_Config
+ 420              		.syntax unified
+ 421              		.thumb
+ 422              		.thumb_func
+ 423              		.fpu fpv4-sp-d16
+ 425              	SystemClock_Config:
+ 426              	.LFB133:
+ 197:Core/Src/main.c ****   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+ 427              		.loc 1 197 1 view -0
+ 428              		.cfi_startproc
+ 429              		@ args = 0, pretend = 0, frame = 80
+ 430              		@ frame_needed = 0, uses_anonymous_args = 0
+ 431 0000 00B5     		push	{lr}
+ARM GAS  /tmp/cc1r2KjE.s 			page 17
+
+
+ 432              	.LCFI4:
+ 433              		.cfi_def_cfa_offset 4
+ 434              		.cfi_offset 14, -4
+ 435 0002 95B0     		sub	sp, sp, #84
+ 436              	.LCFI5:
+ 437              		.cfi_def_cfa_offset 88
+ 198:Core/Src/main.c ****   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+ 438              		.loc 1 198 3 view .LVU105
+ 198:Core/Src/main.c ****   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+ 439              		.loc 1 198 22 is_stmt 0 view .LVU106
+ 440 0004 3022     		movs	r2, #48
+ 441 0006 0021     		movs	r1, #0
+ 442 0008 08A8     		add	r0, sp, #32
+ 443 000a FFF7FEFF 		bl	memset
+ 444              	.LVL20:
+ 199:Core/Src/main.c **** 
+ 445              		.loc 1 199 3 is_stmt 1 view .LVU107
+ 199:Core/Src/main.c **** 
+ 446              		.loc 1 199 22 is_stmt 0 view .LVU108
+ 447 000e 0023     		movs	r3, #0
+ 448 0010 0393     		str	r3, [sp, #12]
+ 449 0012 0493     		str	r3, [sp, #16]
+ 450 0014 0593     		str	r3, [sp, #20]
+ 451 0016 0693     		str	r3, [sp, #24]
+ 452 0018 0793     		str	r3, [sp, #28]
+ 203:Core/Src/main.c ****   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+ 453              		.loc 1 203 3 is_stmt 1 view .LVU109
+ 454              	.LBB6:
+ 203:Core/Src/main.c ****   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+ 455              		.loc 1 203 3 view .LVU110
+ 456 001a 0193     		str	r3, [sp, #4]
+ 203:Core/Src/main.c ****   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+ 457              		.loc 1 203 3 view .LVU111
+ 458 001c 204A     		ldr	r2, .L17
+ 459 001e 116C     		ldr	r1, [r2, #64]
+ 460 0020 41F08051 		orr	r1, r1, #268435456
+ 461 0024 1164     		str	r1, [r2, #64]
+ 203:Core/Src/main.c ****   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+ 462              		.loc 1 203 3 view .LVU112
+ 463 0026 126C     		ldr	r2, [r2, #64]
+ 464 0028 02F08052 		and	r2, r2, #268435456
+ 465 002c 0192     		str	r2, [sp, #4]
+ 203:Core/Src/main.c ****   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+ 466              		.loc 1 203 3 view .LVU113
+ 467 002e 019A     		ldr	r2, [sp, #4]
+ 468              	.LBE6:
+ 203:Core/Src/main.c ****   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+ 469              		.loc 1 203 3 view .LVU114
+ 204:Core/Src/main.c ****   /** Initializes the RCC Oscillators according to the specified parameters
+ 470              		.loc 1 204 3 view .LVU115
+ 471              	.LBB7:
+ 204:Core/Src/main.c ****   /** Initializes the RCC Oscillators according to the specified parameters
+ 472              		.loc 1 204 3 view .LVU116
+ 473 0030 0293     		str	r3, [sp, #8]
+ 204:Core/Src/main.c ****   /** Initializes the RCC Oscillators according to the specified parameters
+ 474              		.loc 1 204 3 view .LVU117
+ 475 0032 1C4B     		ldr	r3, .L17+4
+ARM GAS  /tmp/cc1r2KjE.s 			page 18
+
+
+ 476 0034 1A68     		ldr	r2, [r3]
+ 477 0036 42F48042 		orr	r2, r2, #16384
+ 478 003a 1A60     		str	r2, [r3]
+ 204:Core/Src/main.c ****   /** Initializes the RCC Oscillators according to the specified parameters
+ 479              		.loc 1 204 3 view .LVU118
+ 480 003c 1B68     		ldr	r3, [r3]
+ 481 003e 03F48043 		and	r3, r3, #16384
+ 482 0042 0293     		str	r3, [sp, #8]
+ 204:Core/Src/main.c ****   /** Initializes the RCC Oscillators according to the specified parameters
+ 483              		.loc 1 204 3 view .LVU119
+ 484 0044 029B     		ldr	r3, [sp, #8]
+ 485              	.LBE7:
+ 204:Core/Src/main.c ****   /** Initializes the RCC Oscillators according to the specified parameters
+ 486              		.loc 1 204 3 view .LVU120
+ 208:Core/Src/main.c ****   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+ 487              		.loc 1 208 3 view .LVU121
+ 208:Core/Src/main.c ****   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+ 488              		.loc 1 208 36 is_stmt 0 view .LVU122
+ 489 0046 0123     		movs	r3, #1
+ 490 0048 0893     		str	r3, [sp, #32]
+ 209:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+ 491              		.loc 1 209 3 is_stmt 1 view .LVU123
+ 209:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+ 492              		.loc 1 209 30 is_stmt 0 view .LVU124
+ 493 004a 4FF48033 		mov	r3, #65536
+ 494 004e 0993     		str	r3, [sp, #36]
+ 210:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+ 495              		.loc 1 210 3 is_stmt 1 view .LVU125
+ 210:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+ 496              		.loc 1 210 34 is_stmt 0 view .LVU126
+ 497 0050 0222     		movs	r2, #2
+ 498 0052 0E92     		str	r2, [sp, #56]
+ 211:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLM = 4;
+ 499              		.loc 1 211 3 is_stmt 1 view .LVU127
+ 211:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLM = 4;
+ 500              		.loc 1 211 35 is_stmt 0 view .LVU128
+ 501 0054 4FF48003 		mov	r3, #4194304
+ 502 0058 0F93     		str	r3, [sp, #60]
+ 212:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLN = 168;
+ 503              		.loc 1 212 3 is_stmt 1 view .LVU129
+ 212:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLN = 168;
+ 504              		.loc 1 212 30 is_stmt 0 view .LVU130
+ 505 005a 0423     		movs	r3, #4
+ 506 005c 1093     		str	r3, [sp, #64]
+ 213:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
+ 507              		.loc 1 213 3 is_stmt 1 view .LVU131
+ 213:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
+ 508              		.loc 1 213 30 is_stmt 0 view .LVU132
+ 509 005e A821     		movs	r1, #168
+ 510 0060 1191     		str	r1, [sp, #68]
+ 214:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLQ = 4;
+ 511              		.loc 1 214 3 is_stmt 1 view .LVU133
+ 214:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLQ = 4;
+ 512              		.loc 1 214 30 is_stmt 0 view .LVU134
+ 513 0062 1292     		str	r2, [sp, #72]
+ 215:Core/Src/main.c ****   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+ 514              		.loc 1 215 3 is_stmt 1 view .LVU135
+ARM GAS  /tmp/cc1r2KjE.s 			page 19
+
+
+ 215:Core/Src/main.c ****   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+ 515              		.loc 1 215 30 is_stmt 0 view .LVU136
+ 516 0064 1393     		str	r3, [sp, #76]
+ 216:Core/Src/main.c ****   {
+ 517              		.loc 1 216 3 is_stmt 1 view .LVU137
+ 216:Core/Src/main.c ****   {
+ 518              		.loc 1 216 7 is_stmt 0 view .LVU138
+ 519 0066 08A8     		add	r0, sp, #32
+ 520 0068 FFF7FEFF 		bl	HAL_RCC_OscConfig
+ 521              	.LVL21:
+ 216:Core/Src/main.c ****   {
+ 522              		.loc 1 216 6 view .LVU139
+ 523 006c 98B9     		cbnz	r0, .L15
+ 222:Core/Src/main.c ****                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+ 524              		.loc 1 222 3 is_stmt 1 view .LVU140
+ 222:Core/Src/main.c ****                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+ 525              		.loc 1 222 31 is_stmt 0 view .LVU141
+ 526 006e 0F23     		movs	r3, #15
+ 527 0070 0393     		str	r3, [sp, #12]
+ 224:Core/Src/main.c ****   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+ 528              		.loc 1 224 3 is_stmt 1 view .LVU142
+ 224:Core/Src/main.c ****   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+ 529              		.loc 1 224 34 is_stmt 0 view .LVU143
+ 530 0072 0223     		movs	r3, #2
+ 531 0074 0493     		str	r3, [sp, #16]
+ 225:Core/Src/main.c ****   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
+ 532              		.loc 1 225 3 is_stmt 1 view .LVU144
+ 225:Core/Src/main.c ****   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
+ 533              		.loc 1 225 35 is_stmt 0 view .LVU145
+ 534 0076 0023     		movs	r3, #0
+ 535 0078 0593     		str	r3, [sp, #20]
+ 226:Core/Src/main.c ****   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
+ 536              		.loc 1 226 3 is_stmt 1 view .LVU146
+ 226:Core/Src/main.c ****   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
+ 537              		.loc 1 226 36 is_stmt 0 view .LVU147
+ 538 007a 4FF4A053 		mov	r3, #5120
+ 539 007e 0693     		str	r3, [sp, #24]
+ 227:Core/Src/main.c **** 
+ 540              		.loc 1 227 3 is_stmt 1 view .LVU148
+ 227:Core/Src/main.c **** 
+ 541              		.loc 1 227 36 is_stmt 0 view .LVU149
+ 542 0080 4FF48053 		mov	r3, #4096
+ 543 0084 0793     		str	r3, [sp, #28]
+ 229:Core/Src/main.c ****   {
+ 544              		.loc 1 229 3 is_stmt 1 view .LVU150
+ 229:Core/Src/main.c ****   {
+ 545              		.loc 1 229 7 is_stmt 0 view .LVU151
+ 546 0086 0521     		movs	r1, #5
+ 547 0088 03A8     		add	r0, sp, #12
+ 548 008a FFF7FEFF 		bl	HAL_RCC_ClockConfig
+ 549              	.LVL22:
+ 229:Core/Src/main.c ****   {
+ 550              		.loc 1 229 6 view .LVU152
+ 551 008e 20B9     		cbnz	r0, .L16
+ 233:Core/Src/main.c **** 
+ 552              		.loc 1 233 1 view .LVU153
+ 553 0090 15B0     		add	sp, sp, #84
+ARM GAS  /tmp/cc1r2KjE.s 			page 20
+
+
+ 554              	.LCFI6:
+ 555              		.cfi_remember_state
+ 556              		.cfi_def_cfa_offset 4
+ 557              		@ sp needed
+ 558 0092 5DF804FB 		ldr	pc, [sp], #4
+ 559              	.L15:
+ 560              	.LCFI7:
+ 561              		.cfi_restore_state
+ 218:Core/Src/main.c ****   }
+ 562              		.loc 1 218 5 is_stmt 1 view .LVU154
+ 563 0096 FFF7FEFF 		bl	Error_Handler
+ 564              	.LVL23:
+ 565              	.L16:
+ 231:Core/Src/main.c ****   }
+ 566              		.loc 1 231 5 view .LVU155
+ 567 009a FFF7FEFF 		bl	Error_Handler
+ 568              	.LVL24:
+ 569              	.L18:
+ 570 009e 00BF     		.align	2
+ 571              	.L17:
+ 572 00a0 00380240 		.word	1073887232
+ 573 00a4 00700040 		.word	1073770496
+ 574              		.cfi_endproc
+ 575              	.LFE133:
+ 577              		.section	.text.main,"ax",%progbits
+ 578              		.align	1
+ 579              		.global	main
+ 580              		.syntax unified
+ 581              		.thumb
+ 582              		.thumb_func
+ 583              		.fpu fpv4-sp-d16
+ 585              	main:
+ 586              	.LFB132:
+ 149:Core/Src/main.c ****   /* USER CODE BEGIN 1 */
+ 587              		.loc 1 149 1 view -0
+ 588              		.cfi_startproc
+ 589              		@ Volatile: function does not return.
+ 590              		@ args = 0, pretend = 0, frame = 8
+ 591              		@ frame_needed = 0, uses_anonymous_args = 0
+ 592 0000 00B5     		push	{lr}
+ 593              	.LCFI8:
+ 594              		.cfi_def_cfa_offset 4
+ 595              		.cfi_offset 14, -4
+ 596 0002 83B0     		sub	sp, sp, #12
+ 597              	.LCFI9:
+ 598              		.cfi_def_cfa_offset 16
+ 157:Core/Src/main.c **** 
+ 599              		.loc 1 157 3 view .LVU157
+ 600 0004 FFF7FEFF 		bl	HAL_Init
+ 601              	.LVL25:
+ 164:Core/Src/main.c **** 
+ 602              		.loc 1 164 3 view .LVU158
+ 603 0008 FFF7FEFF 		bl	SystemClock_Config
+ 604              	.LVL26:
+ 171:Core/Src/main.c ****   MX_I2C1_Init();
+ 605              		.loc 1 171 3 view .LVU159
+ 606 000c FFF7FEFF 		bl	MX_GPIO_Init
+ARM GAS  /tmp/cc1r2KjE.s 			page 21
+
+
+ 607              	.LVL27:
+ 172:Core/Src/main.c ****   MX_I2S3_Init();
+ 608              		.loc 1 172 3 view .LVU160
+ 609 0010 FFF7FEFF 		bl	MX_I2C1_Init
+ 610              	.LVL28:
+ 173:Core/Src/main.c ****   /* USER CODE BEGIN 2 */
+ 611              		.loc 1 173 3 view .LVU161
+ 612 0014 FFF7FEFF 		bl	MX_I2S3_Init
+ 613              	.LVL29:
+ 175:Core/Src/main.c ****   uint16_t signal;
+ 614              		.loc 1 175 3 view .LVU162
+ 615 0018 FFF7FEFF 		bl	configAudio
+ 616              	.LVL30:
+ 617              	.L20:
+ 176:Core/Src/main.c ****   /* USER CODE END 2 */
+ 618              		.loc 1 176 3 discriminator 1 view .LVU163
+ 181:Core/Src/main.c ****   {
+ 619              		.loc 1 181 3 discriminator 1 view .LVU164
+ 183:Core/Src/main.c ****     HAL_I2S_Transmit(&hi2s3, &signal, 1, 10);
+ 620              		.loc 1 183 5 discriminator 1 view .LVU165
+ 183:Core/Src/main.c ****     HAL_I2S_Transmit(&hi2s3, &signal, 1, 10);
+ 621              		.loc 1 183 14 is_stmt 0 discriminator 1 view .LVU166
+ 622 001c FFF7FEFF 		bl	rand
+ 623              	.LVL31:
+ 183:Core/Src/main.c ****     HAL_I2S_Transmit(&hi2s3, &signal, 1, 10);
+ 624              		.loc 1 183 12 discriminator 1 view .LVU167
+ 625 0020 ADF80600 		strh	r0, [sp, #6]	@ movhi
+ 184:Core/Src/main.c ****     /* USER CODE END WHILE */
+ 626              		.loc 1 184 5 is_stmt 1 discriminator 1 view .LVU168
+ 627 0024 0A23     		movs	r3, #10
+ 628 0026 0122     		movs	r2, #1
+ 629 0028 0DF10601 		add	r1, sp, #6
+ 630 002c 0148     		ldr	r0, .L22
+ 631 002e FFF7FEFF 		bl	HAL_I2S_Transmit
+ 632              	.LVL32:
+ 181:Core/Src/main.c ****   {
+ 633              		.loc 1 181 9 discriminator 1 view .LVU169
+ 634 0032 F3E7     		b	.L20
+ 635              	.L23:
+ 636              		.align	2
+ 637              	.L22:
+ 638 0034 00000000 		.word	hi2s3
+ 639              		.cfi_endproc
+ 640              	.LFE132:
+ 642              		.text
+ 643              	.Letext0:
+ 644              		.file 3 "/usr/lib/gcc/arm-none-eabi/9.2.1/include/stddef.h"
+ 645              		.file 4 "/usr/include/newlib/sys/_types.h"
+ 646              		.file 5 "/usr/include/newlib/sys/reent.h"
+ 647              		.file 6 "/usr/include/newlib/sys/lock.h"
+ 648              		.file 7 "/usr/include/newlib/stdlib.h"
+ 649              		.file 8 "/usr/lib/gcc/arm-none-eabi/9.2.1/include/stdint.h"
+ 650              		.file 9 "Drivers/CMSIS/Include/core_cm4.h"
+ 651              		.file 10 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h"
+ 652              		.file 11 "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h"
+ 653              		.file 12 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h"
+ 654              		.file 13 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h"
+ARM GAS  /tmp/cc1r2KjE.s 			page 22
+
+
+ 655              		.file 14 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h"
+ 656              		.file 15 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h"
+ 657              		.file 16 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h"
+ 658              		.file 17 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h"
+ 659              		.file 18 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h"
+ 660              		.file 19 "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h"
+ 661              		.file 20 "Core/Inc/i2c.h"
+ 662              		.file 21 "Core/Inc/i2s.h"
+ 663              		.file 22 "Core/Inc/gpio.h"
+ 664              		.file 23 "<built-in>"
+ARM GAS  /tmp/cc1r2KjE.s 			page 23
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 main.c
+     /tmp/cc1r2KjE.s:18     .text.init_AudioReset:0000000000000000 $t
+     /tmp/cc1r2KjE.s:26     .text.init_AudioReset:0000000000000000 init_AudioReset
+     /tmp/cc1r2KjE.s:49     .text.init_AudioReset:0000000000000010 $d
+     /tmp/cc1r2KjE.s:54     .text.configAudio:0000000000000000 $t
+     /tmp/cc1r2KjE.s:61     .text.configAudio:0000000000000000 configAudio
+     /tmp/cc1r2KjE.s:374    .text.configAudio:00000000000001dc $d
+     /tmp/cc1r2KjE.s:379    .text.Error_Handler:0000000000000000 $t
+     /tmp/cc1r2KjE.s:386    .text.Error_Handler:0000000000000000 Error_Handler
+     /tmp/cc1r2KjE.s:418    .text.SystemClock_Config:0000000000000000 $t
+     /tmp/cc1r2KjE.s:425    .text.SystemClock_Config:0000000000000000 SystemClock_Config
+     /tmp/cc1r2KjE.s:572    .text.SystemClock_Config:00000000000000a0 $d
+     /tmp/cc1r2KjE.s:578    .text.main:0000000000000000 $t
+     /tmp/cc1r2KjE.s:585    .text.main:0000000000000000 main
+     /tmp/cc1r2KjE.s:638    .text.main:0000000000000034 $d
+
+UNDEFINED SYMBOLS
+HAL_GPIO_WritePin
+HAL_I2C_Master_Transmit
+hi2c1
+memset
+HAL_RCC_OscConfig
+HAL_RCC_ClockConfig
+HAL_Init
+MX_GPIO_Init
+MX_I2C1_Init
+MX_I2S3_Init
+rand
+HAL_I2S_Transmit
+hi2s3
